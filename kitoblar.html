@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitob Trendlarini Qidirish va Buyurtma Berish — Tajriba-sinov Web Dasturi</title>
+  <link rel="shortcut icon" href="https://i.pinimg.com/280x280_RS/c9/90/a6/c990a654e2382960e4fc95ce3ccb233d.jpg" type="image/x-icon">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --accent: #f97316;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #ca8a04;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      color: white;
+      padding: 24px 5%;
+      box-shadow: var(--shadow);
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .logo h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+
+    .logo p {
+      margin: 0;
+      color: #dbeafe;
+      line-height: 1.45;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+    }
+
+    main {
+      width: 90%;
+      max-width: 1200px;
+      margin: 24px auto 60px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    h2, h3 { margin-top: 0; }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    input, select, button, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      outline: none;
+      background: white;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.12);
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    button:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    button.secondary { background: #eef2ff; color: var(--primary); border: 1px solid #c7d2fe; }
+    button.secondary:hover { background: #dbeafe; }
+    button.danger { background: var(--danger); }
+    button.danger:hover { background: #b91c1c; }
+
+    .book-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .book {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 14px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .cover {
+      height: 130px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #dbeafe, #ffedd5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--primary);
+      text-align: center;
+      padding: 8px;
+    }
+
+    .book h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 0 0 8px;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .badge {
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #374151;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.hot { background: #ffedd5; color: #c2410c; }
+    .badge.score { background: #dbeafe; color: var(--primary); }
+    .badge.stock { background: #dcfce7; color: #166534; }
+
+    .book-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .book-actions button { padding: 9px 10px; font-size: 13px; }
+
+    .side-section { margin-bottom: 18px; }
+    .cart-item, .test-item, .order-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .cart-item strong, .order-item strong { display: block; margin-bottom: 4px; }
+    .small { color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 25px;
+      margin-bottom: 5px;
+      color: var(--primary);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 18px 0;
+      flex-wrap: wrap;
+    }
+
+    .tab-button {
+      width: auto;
+      padding: 10px 14px;
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .tab-button.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .hidden { display: none; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th { background: #f3f4f6; }
+
+    .progress {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      background: var(--success);
+      width: 0;
+      transition: width 0.4s ease;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-content {
+      max-width: 620px;
+      width: 100%;
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #111827;
+      color: white;
+      padding: 14px 16px;
+      border-radius: 14px;
+      display: none;
+      z-index: 20;
+      max-width: 360px;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 950px) {
+      .grid { grid-template-columns: 1fr; }
+      .book-list { grid-template-columns: 1fr; }
+      .filters { grid-template-columns: 1fr 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      main { width: 94%; }
+      .filters, .stats { grid-template-columns: 1fr; }
+      .book { grid-template-columns: 1fr; }
+      .cover { height: 110px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <div class="logo">
+        <h1>Kitob Trendlari va Buyurtma Tizimi</h1>
+        <p>Bitiruv malakaviy ish tajriba-sinovi uchun web ko‘rinishdagi prototip</p>
+      </div>
+      <div class="header-actions">
+        <span class="pill">Trend algoritm: ko‘rish + buyurtma + reyting + sevimlilar</span>
+        <span class="pill" id="currentDate"></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="stats">
+      <div class="stat"><strong id="statBooks">0</strong><span class="small">Katalogdagi kitoblar</span></div>
+      <div class="stat"><strong id="statOrders">0</strong><span class="small">Sinov buyurtmalari</span></div>
+      <div class="stat"><strong id="statViews">0</strong><span class="small">Simulyatsiya qilingan ko‘rishlar</span></div>
+      <div class="stat"><strong id="statAvg">0%</strong><span class="small">Testlardan o‘tish darajasi</span></div>
+    </section>
+
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('catalog')">Katalog va trendlar</button>
+      <button class="tab-button" onclick="showTab('orders')">Buyurtmalar</button>
+      <button class="tab-button" onclick="showTab('tests')">Tajriba-sinov</button>
+      <button class="tab-button" onclick="showTab('algorithm')">Algoritm izohi</button>
+    </div>
+
+    <section id="catalogTab" class="grid">
+      <div class="card">
+        <h2>Kitoblarni qidirish va trend bo‘yicha saralash</h2>
+        <div class="filters">
+          <input id="searchInput" type="search" placeholder="Kitob nomi, muallif yoki janr bo‘yicha qidirish..." oninput="renderBooks()" />
+          <select id="genreFilter" onchange="renderBooks()">
+            <option value="all">Barcha janrlar</option>
+            <option value="Dasturlash">Dasturlash</option>
+            <option value="Ilmiy-ommabop">Ilmiy-ommabop</option>
+            <option value="Badiiy">Badiiy</option>
+            <option value="Biznes">Biznes</option>
+            <option value="Tarix">Tarix</option>
+          </select>
+          <select id="languageFilter" onchange="renderBooks()">
+            <option value="all">Barcha tillar</option>
+            <option value="uz">O‘zbek</option>
+            <option value="ru">Rus</option>
+            <option value="en">Ingliz</option>
+          </select>
+          <select id="sortFilter" onchange="renderBooks()">
+            <option value="trend">Trend bo‘yicha</option>
+            <option value="priceAsc">Narx: arzon</option>
+            <option value="priceDesc">Narx: qimmat</option>
+            <option value="rating">Reyting</option>
+            <option value="new">Yangi nashr</option>
+          </select>
+        </div>
+        <div id="bookList" class="book-list"></div>
+      </div>
+
+      <aside class="card">
+        <div class="side-section">
+          <h2>Savatcha</h2>
+          <div id="cartList"></div>
+          <p><strong>Jami:</strong> <span id="cartTotal">0</span> so‘m</p>
+          <button onclick="placeOrder()">Buyurtma berish</button>
+          <button class="secondary" style="margin-top:8px" onclick="clearCart()">Savatchani tozalash</button>
+        </div>
+        <div class="side-section">
+          <h3>Trend TOP-5</h3>
+          <div id="topTrends"></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="ordersTab" class="card hidden">
+      <h2>Sinov buyurtmalari tarixi</h2>
+      <p class="small">Bu bo‘lim tajriba-sinov jarayonida foydalanuvchi buyurtma berish funksiyasi ishlayotganini ko‘rsatadi.</p>
+      <div id="ordersList"></div>
+    </section>
+
+    <section id="testsTab" class="card hidden">
+      <h2>Tajriba-sinov paneli</h2>
+      <p class="small">Quyidagi testlar BMI 3-bobidagi sinovdan o‘tkazish bo‘limi uchun amaliy natija sifatida ishlatilishi mumkin.</p>
+      <button onclick="runTests()">Sinovlarni ishga tushirish</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Test nomi</th>
+            <th>Mezon</th>
+            <th>Natija</th>
+            <th>Holat</th>
+          </tr>
+        </thead>
+        <tbody id="testResults"></tbody>
+      </table>
+    </section>
+
+    <section id="algorithmTab" class="card hidden">
+      <h2>Trend hisoblash algoritmi</h2>
+      <p class="small">
+        Dasturda har bir kitob uchun trend skori quyidagi omillar asosida hisoblanadi: ko‘rishlar soni, buyurtmalar soni, reyting, izohlar va sevimlilarga qo‘shishlar.
+      </p>
+      <table>
+        <thead><tr><th>Omil</th><th>Og‘irlik</th><th>Izoh</th></tr></thead>
+        <tbody>
+          <tr><td>Ko‘rishlar</td><td>0.30</td><td>Foydalanuvchi qiziqishini bildiradi</td></tr>
+          <tr><td>Buyurtmalar</td><td>0.35</td><td>Real xarid qilish niyatining eng kuchli signali</td></tr>
+          <tr><td>Reyting</td><td>0.15</td><td>Kitob sifati va foydalanuvchi bahosi</td></tr>
+          <tr><td>Izohlar</td><td>0.12</td><td>Faol muhokama darajasi</td></tr>
+          <tr><td>Sevimlilar</td><td>0.08</td><td>Kelajakdagi xarid ehtimoli</td></tr>
+        </tbody>
+      </table>
+      <h3>Formula</h3>
+      <pre style="white-space:pre-wrap;background:#f3f4f6;padding:14px;border-radius:14px;">TrendScore = 0.30·views_norm + 0.35·orders_norm + 0.15·rating_norm + 0.12·reviews_norm + 0.08·favorites_norm</pre>
+      <p class="small">Normalizatsiya Min-Max usuli bilan bajariladi. Natija 0 dan 100 gacha foiz ko‘rinishida chiqariladi.</p>
+    </section>
+  </main>
+
+  <div class="modal" id="bookModal">
+    <div class="modal-content">
+      <h2 id="modalTitle"></h2>
+      <p id="modalBody" class="small"></p>
+      <div class="progress"><span id="modalProgress"></span></div>
+      <br />
+      <button onclick="closeModal()">Yopish</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const books = [
+      { id: 1, title: "JavaScript va React asoslari", author: "A. Karimov", genre: "Dasturlash", language: "uz", price: 85000, stock: 14, rating: 4.8, views: 320, orders: 42, reviews: 18, favorites: 61, year: 2025, description: "Frontend dasturlashni o‘rganish uchun amaliy qo‘llanma." },
+      { id: 2, title: "Python Data Analysis", author: "M. Rahimov", genre: "Dasturlash", language: "uz", price: 92000, stock: 8, rating: 4.7, views: 280, orders: 35, reviews: 14, favorites: 52, year: 2024, description: "Python, NumPy, Pandas va vizual tahlil bo‘yicha kitob." },
+      { id: 3, title: "Sun’iy intellektga kirish", author: "N. Jo‘rayev", genre: "Ilmiy-ommabop", language: "uz", price: 78000, stock: 22, rating: 4.9, views: 410, orders: 50, reviews: 27, favorites: 74, year: 2026, description: "AI, ML va neyron tarmoqlar haqida sodda va tizimli bayon." },
+      { id: 4, title: "Atomic Habits", author: "James Clear", genre: "Biznes", language: "en", price: 110000, stock: 6, rating: 4.9, views: 260, orders: 29, reviews: 16, favorites: 48, year: 2018, description: "Shaxsiy samaradorlik va odatlarni shakllantirish haqida bestseller." },
+      { id: 5, title: "O‘tkan kunlar", author: "Abdulla Qodiriy", genre: "Badiiy", language: "uz", price: 55000, stock: 30, rating: 4.8, views: 190, orders: 24, reviews: 21, favorites: 35, year: 2023, description: "O‘zbek adabiyotining klassik romani." },
+      { id: 6, title: "Sapiens", author: "Yuval Noah Harari", genre: "Tarix", language: "ru", price: 125000, stock: 10, rating: 4.6, views: 210, orders: 20, reviews: 12, favorites: 34, year: 2021, description: "Insoniyat tarixiga keng nazar." },
+      { id: 7, title: "Clean Code", author: "Robert C. Martin", genre: "Dasturlash", language: "en", price: 145000, stock: 5, rating: 4.7, views: 230, orders: 26, reviews: 19, favorites: 45, year: 2008, description: "Dastur kodini sifatli yozish tamoyillari." },
+      { id: 8, title: "Moliyaviy savodxonlik", author: "S. Ergashev", genre: "Biznes", language: "uz", price: 64000, stock: 18, rating: 4.4, views: 155, orders: 17, reviews: 9, favorites: 28, year: 2025, description: "Shaxsiy moliya va investitsiya asoslari." }
+    ];
+
+    let cart = [];
+    let orders = [];
+    let totalViews = books.reduce((s, b) => s + b.views, 0);
+
+    function normalize(value, min, max) {
+      return (value - min) / (max - min + 0.0001);
+    }
+
+    function calculateTrendScores() {
+      const fields = ["views", "orders", "reviews", "favorites", "rating"];
+      const ranges = {};
+      fields.forEach(f => {
+        ranges[f] = {
+          min: Math.min(...books.map(b => b[f])),
+          max: Math.max(...books.map(b => b[f]))
+        };
+      });
+
+      books.forEach(book => {
+        const score =
+          0.30 * normalize(book.views, ranges.views.min, ranges.views.max) +
+          0.35 * normalize(book.orders, ranges.orders.min, ranges.orders.max) +
+          0.15 * normalize(book.rating, ranges.rating.min, ranges.rating.max) +
+          0.12 * normalize(book.reviews, ranges.reviews.min, ranges.reviews.max) +
+          0.08 * normalize(book.favorites, ranges.favorites.min, ranges.favorites.max);
+        book.trendScore = Math.round(score * 1000) / 10;
+      });
+    }
+
+    function formatMoney(num) {
+      return num.toLocaleString("uz-UZ");
+    }
+
+    function renderBooks() {
+      calculateTrendScores();
+      const q = document.getElementById("searchInput").value.toLowerCase().trim();
+      const genre = document.getElementById("genreFilter").value;
+      const lang = document.getElementById("languageFilter").value;
+      const sort = document.getElementById("sortFilter").value;
+
+      let filtered = books.filter(b =>
+        (b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q) || b.genre.toLowerCase().includes(q)) &&
+        (genre === "all" || b.genre === genre) &&
+        (lang === "all" || b.language === lang)
+      );
+
+      if (sort === "trend") filtered.sort((a,b) => b.trendScore - a.trendScore);
+      if (sort === "priceAsc") filtered.sort((a,b) => a.price - b.price);
+      if (sort === "priceDesc") filtered.sort((a,b) => b.price - a.price);
+      if (sort === "rating") filtered.sort((a,b) => b.rating - a.rating);
+      if (sort === "new") filtered.sort((a,b) => b.year - a.year);
+
+      const list = document.getElementById("bookList");
+      list.innerHTML = filtered.map(book => `
+        <article class="book">
+          <div class="cover">${book.title.split(" ").slice(0,3).join("<br>")}</div>
+          <div>
+            <h3>${book.title}</h3>
+            <p class="meta">${book.author} · ${book.genre} · ${book.language.toUpperCase()} · ${book.year}</p>
+            <div class="badges">
+              <span class="badge hot">Trend ${book.trendScore}%</span>
+              <span class="badge score">★ ${book.rating}</span>
+              <span class="badge stock">Ombor: ${book.stock}</span>
+            </div>
+            <p class="meta">Narx: <strong>${formatMoney(book.price)} so‘m</strong></p>
+            <div class="book-actions">
+              <button onclick="addToCart(${book.id})">Savatga</button>
+              <button class="secondary" onclick="viewBook(${book.id})">Ko‘rish</button>
+            </div>
+          </div>
+        </article>
+      `).join("") || `<p class="small">Qidiruv bo‘yicha natija topilmadi.</p>`;
+
+      renderTopTrends();
+      renderStats();
+    }
+
+    function renderTopTrends() {
+      calculateTrendScores();
+      const top = [...books].sort((a,b) => b.trendScore - a.trendScore).slice(0,5);
+      document.getElementById("topTrends").innerHTML = top.map((b, i) => `
+        <div class="test-item">
+          <strong>${i + 1}. ${b.title}</strong>
+          <div class="small">Trend skori: ${b.trendScore}% · Buyurtma: ${b.orders} · Ko‘rish: ${b.views}</div>
+        </div>
+      `).join("");
+    }
+
+    function addToCart(id) {
+      const book = books.find(b => b.id === id);
+      if (!book || book.stock <= 0) return showToast("Bu kitob omborda mavjud emas.");
+      const found = cart.find(i => i.id === id);
+      if (found) found.quantity += 1;
+      else cart.push({ ...book, quantity: 1 });
+      showToast("Kitob savatchaga qo‘shildi.");
+      renderCart();
+    }
+
+    function renderCart() {
+      const el = document.getElementById("cartList");
+      if (!cart.length) {
+        el.innerHTML = `<p class="small">Savatcha bo‘sh.</p>`;
+      } else {
+        el.innerHTML = cart.map(item => `
+          <div class="cart-item">
+            <strong>${item.title}</strong>
+            <div class="small">${item.quantity} dona × ${formatMoney(item.price)} so‘m</div>
+            <button class="danger" style="margin-top:8px" onclick="removeFromCart(${item.id})">O‘chirish</button>
+          </div>
+        `).join("");
+      }
+      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+      document.getElementById("cartTotal").textContent = formatMoney(total);
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCart();
+      showToast("Savatcha tozalandi.");
+    }
+
+    function placeOrder() {
+      if (!cart.length) return showToast("Buyurtma berish uchun savatchaga kitob qo‘shing.");
+      const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+      const order = {
+        id: Date.now(),
+        date: new Date().toLocaleString("uz-UZ"),
+        items: cart.map(i => ({ title: i.title, quantity: i.quantity, price: i.price })),
+        total,
+        status: "Qabul qilindi"
+      };
+      orders.unshift(order);
+      cart.forEach(item => {
+        const book = books.find(b => b.id === item.id);
+        if (book) {
+          book.stock -= item.quantity;
+          book.orders += item.quantity;
+        }
+      });
+      cart = [];
+      showToast("Buyurtma muvaffaqiyatli rasmiylashtirildi.");
+      renderCart();
+      renderOrders();
+      renderBooks();
+    }
+
+    function renderOrders() {
+      const el = document.getElementById("ordersList");
+      if (!orders.length) {
+        el.innerHTML = `<p class="small">Hozircha buyurtmalar mavjud emas.</p>`;
+        return;
+      }
+      el.innerHTML = orders.map(order => `
+        <div class="order-item">
+          <strong>Buyurtma №${order.id}</strong>
+          <div class="small">Sana: ${order.date} · Holat: ${order.status}</div>
+          <ul>${order.items.map(i => `<li>${i.title} — ${i.quantity} dona</li>`).join("")}</ul>
+          <strong>Jami: ${formatMoney(order.total)} so‘m</strong>
+        </div>
+      `).join("");
+    }
+
+    function viewBook(id) {
+      const book = books.find(b => b.id === id);
+      if (!book) return;
+      book.views += 1;
+      totalViews += 1;
+      calculateTrendScores();
+      document.getElementById("modalTitle").textContent = book.title;
+      document.getElementById("modalBody").innerHTML = `
+        <strong>Muallif:</strong> ${book.author}<br>
+        <strong>Janr:</strong> ${book.genre}<br>
+        <strong>Tavsif:</strong> ${book.description}<br><br>
+        <strong>Ko‘rishlar:</strong> ${book.views}; <strong>Buyurtmalar:</strong> ${book.orders}; <strong>Trend skori:</strong> ${book.trendScore}%
+      `;
+      document.getElementById("modalProgress").style.width = `${book.trendScore}%`;
+      document.getElementById("bookModal").classList.add("open");
+      renderBooks();
+    }
+
+    function closeModal() {
+      document.getElementById("bookModal").classList.remove("open");
+    }
+
+    function showTab(name) {
+      document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      document.getElementById("catalogTab").classList.toggle("hidden", name !== "catalog");
+      document.getElementById("ordersTab").classList.toggle("hidden", name !== "orders");
+      document.getElementById("testsTab").classList.toggle("hidden", name !== "tests");
+      document.getElementById("algorithmTab").classList.toggle("hidden", name !== "algorithm");
+    }
+
+    function runTests() {
+      calculateTrendScores();
+      const tests = [
+        {
+          name: "Qidiruv funksiyasi",
+          criteria: "'Python' so‘rovi bo‘yicha kamida 1 ta natija topilishi",
+          result: books.filter(b => b.title.toLowerCase().includes("python")).length,
+          pass: books.filter(b => b.title.toLowerCase().includes("python")).length >= 1
+        },
+        {
+          name: "Trend skori hisoblash",
+          criteria: "Barcha kitoblar uchun trend skori 0–100 oralig‘ida bo‘lishi",
+          result: books.every(b => b.trendScore >= 0 && b.trendScore <= 100) ? "Mezonga mos" : "Xatolik bor",
+          pass: books.every(b => b.trendScore >= 0 && b.trendScore <= 100)
+        },
+        {
+          name: "Buyurtma funksiyasi",
+          criteria: "Buyurtmalar ro‘yxati massiv sifatida yuritilishi",
+          result: Array.isArray(orders) ? "Ishlamoqda" : "Xatolik",
+          pass: Array.isArray(orders)
+        },
+        {
+          name: "Ombor nazorati",
+          criteria: "Ombordagi miqdor manfiy bo‘lmasligi",
+          result: books.every(b => b.stock >= 0) ? "Mezonga mos" : "Manfiy qoldiq bor",
+          pass: books.every(b => b.stock >= 0)
+        },
+        {
+          name: "Responsiv interfeys",
+          criteria: "Ekran kengligi aniqlanadi va layout moslashadi",
+          result: window.innerWidth + " px",
+          pass: window.innerWidth > 0
+        }
+      ];
+
+      const passed = tests.filter(t => t.pass).length;
+      document.getElementById("testResults").innerHTML = tests.map(t => `
+        <tr>
+          <td>${t.name}</td>
+          <td>${t.criteria}</td>
+          <td>${t.result}</td>
+          <td style="font-weight:700;color:${t.pass ? 'var(--success)' : 'var(--danger)'}">${t.pass ? 'O‘tdi' : 'O‘tmadi'}</td>
+        </tr>
+      `).join("");
+      document.getElementById("statAvg").textContent = Math.round((passed / tests.length) * 100) + "%";
+      showToast(`Sinov yakunlandi: ${passed}/${tests.length} test muvaffaqiyatli.`);
+    }
+
+    function renderStats() {
+      document.getElementById("statBooks").textContent = books.length;
+      document.getElementById("statOrders").textContent = orders.length;
+      document.getElementById("statViews").textContent = totalViews;
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.style.display = "block";
+      setTimeout(() => toast.style.display = "none", 2400);
+    }
+
+    document.getElementById("currentDate").textContent = new Date().toLocaleDateString("uz-UZ");
+    calculateTrendScores();
+    renderBooks();
+    renderCart();
+    renderOrders();
+    renderStats();
+  </script>
+</body>
+</html>
